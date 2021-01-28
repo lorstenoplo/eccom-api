@@ -4,11 +4,12 @@ import mongoose from "mongoose";
 import express from "express";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
+import { ProductResolver } from "./resolvers/products";
 
 const main = async () => {
   try {
     await mongoose.connect(
-      "mongodb+srv://admin:admin@cluster0.s9xcu.mongodb.net/users?retryWrites=true&w=majority",
+      "mongodb+srv://admin:admin@cluster0.s9xcu.mongodb.net/ecommerce?retryWrites=true&w=majority",
       { useNewUrlParser: true, useUnifiedTopology: true }
     );
     if (!__prod__) {
@@ -22,9 +23,13 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [HelloResolver, ProductResolver],
       validate: false,
     }),
+  });
+
+  app.get("/", (_, res) => {
+    res.send("welcome to the products api");
   });
 
   apolloServer.applyMiddleware({ app });
