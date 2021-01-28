@@ -8,10 +8,10 @@ import { ProductResolver } from "./resolvers/products";
 
 const main = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://admin:admin@cluster0.s9xcu.mongodb.net/ecommerce?retryWrites=true&w=majority",
-      { useNewUrlParser: true, useUnifiedTopology: true }
-    );
+    await mongoose.connect(process.env.MONGO_CONNECTION_URL || "", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     if (!__prod__) {
       console.log("db connected");
     }
