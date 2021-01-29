@@ -5,8 +5,10 @@ import express from "express";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
 import { ProductResolver } from "./resolvers/products";
+import { config } from "dotenv";
 
 const main = async () => {
+  config();
   try {
     await mongoose.connect(process.env.MONGO_CONNECTION_URL || "", {
       useNewUrlParser: true,
