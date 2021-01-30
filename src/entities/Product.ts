@@ -4,23 +4,23 @@ import { prop as Property, getModelForClass } from "@typegoose/typegoose";
 @ObjectType()
 export class Product {
   @Field(() => ID)
-  id!: typeof ID;
+  id: typeof ID;
 
   @Field()
   @Property({ required: true })
-  title!: String;
+  title: String;
 
   @Field()
   @Property({ required: true })
-  price!: number;
+  price: number;
 
   @Field()
   @Property({ required: true })
-  rating!: number;
+  rating: number;
 
   @Field()
   @Property({ required: true })
-  imageURL!: string;
+  imageURL: string;
 }
 
 export const ProductModel = getModelForClass(Product);
