@@ -27,6 +27,7 @@ const main = async () => {
   app.use(
     cors({
       origin: "http://localhost:3000",
+      credentials: true,
     })
   );
 
@@ -41,7 +42,7 @@ const main = async () => {
     res.send("welcome to the products api");
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(PORT, () => {
     console.log(`server listening at http://localhost:${PORT}`);

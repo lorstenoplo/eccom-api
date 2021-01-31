@@ -8,6 +8,8 @@ import {
 } from "type-graphql";
 import { User, UserModel } from "../entities/User";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { DocumentType } from "@typegoose/typegoose";
 
 @InputType()
 class UsernamePasswordInput {
@@ -32,6 +34,20 @@ class UserResponse {
 
   @Field(() => User, { nullable: true })
   user?: User | null;
+
+  @Field(() => String, { nullable: true })
+  token?: string | null;
+}
+
+function generateToken(user: DocumentType<User> | null) {
+  return jwt.sign(
+    {
+      id: user?.id,
+      username: user?.username,
+    },
+    process.env.JWT_KEY || "@njkddm#jkim",
+    { expiresIn: "1h" }
+  );
 }
 
 @Resolver()
@@ -86,8 +102,8 @@ export class UserResolver {
       }
     }
     const user = await UserModel.findOne({ username: options.username });
-
-    return { user };
+    const token = generateToken(user);
+    return { user, token };
   }
 
   @Mutation(() => UserResponse)
@@ -116,7 +132,8 @@ export class UserResolver {
         ],
       };
     }
-    return { user };
+    const token = generateToken(user);
+    return { user, token };
   }
 
   @Mutation(() => User!, { nullable: true })
