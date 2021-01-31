@@ -13,7 +13,7 @@ export class ProductResolver {
   async product(
     @Arg("id", () => ID) id: typeof ID
   ): Promise<Product | undefined | null> {
-    return await ProductModel.findOne(id);
+    return await ProductModel.findOne({ _id: id });
   }
 
   @Mutation(() => Product!)
@@ -31,5 +31,20 @@ export class ProductResolver {
     });
 
     return (await product).save();
+  }
+
+  @Mutation(() => Product!, { nullable: true })
+  async deleteProduct(
+    @Arg("id", () => ID) id: typeof ID
+  ): Promise<Product | null | undefined> {
+    const product = await ProductModel.findOne({ _id: id });
+
+    if (product) {
+      product.deleteOne();
+
+      return product;
+    }
+
+    return null;
   }
 }
