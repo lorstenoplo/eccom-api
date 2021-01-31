@@ -29,6 +29,7 @@
     "apollo-server-express": "^2.19.2",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.13.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^15.4.0",
     "mongoose": "5.10.1",

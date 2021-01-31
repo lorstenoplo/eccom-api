@@ -7,6 +7,7 @@ import { HelloResolver } from "./resolvers/hello";
 import { ProductResolver } from "./resolvers/products";
 import { config } from "dotenv";
 import { UserResolver } from "./resolvers/user";
+import cors from "cors";
 
 const main = async () => {
   config();
@@ -23,6 +24,11 @@ const main = async () => {
   }
 
   const app = express();
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+    })
+  );
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
