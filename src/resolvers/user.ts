@@ -45,8 +45,7 @@ function generateToken(user: DocumentType<User> | null) {
       id: user?.id,
       username: user?.username,
     },
-    process.env.JWT_KEY || "@njkddm#jkim",
-    { expiresIn: "1h" }
+    process.env.JWT_KEY || "@njkddm#jkim"
   );
 }
 
