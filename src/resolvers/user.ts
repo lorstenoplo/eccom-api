@@ -5,6 +5,7 @@ import {
   InputType,
   Field,
   ObjectType,
+  Query,
 } from "type-graphql";
 import { User, UserModel } from "../entities/User";
 import bcrypt from "bcryptjs";
@@ -51,6 +52,17 @@ function generateToken(user: DocumentType<User> | null) {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Arg("token") token: string) {
+    const decodedUser = jwt.decode(token);
+    const uid = (decodedUser as any)?.id;
+    const user = await UserModel.findOne({ _id: uid });
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg("options") options: UsernamePasswordInput
