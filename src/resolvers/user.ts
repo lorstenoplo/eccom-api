@@ -53,7 +53,7 @@ function generateToken(user: DocumentType<User> | null) {
 @Resolver()
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  async me(@Arg("token") token: string) {
+  async me(@Arg("token") token: string): Promise<User | null> {
     const decodedUser = jwt.decode(token);
     const uid = (decodedUser as any)?.id;
     const user = await UserModel.findOne({ _id: uid });
