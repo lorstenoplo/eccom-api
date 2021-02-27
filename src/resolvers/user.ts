@@ -11,6 +11,7 @@ import { User, UserModel } from "../entities/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { DocumentType } from "@typegoose/typegoose";
+import { sendEmail } from "../utils/sendEmail";
 
 @InputType()
 class UsernamePasswordInput {
@@ -61,6 +62,18 @@ export class UserResolver {
       return null;
     }
     return user;
+  }
+
+  @Mutation(() => Boolean, { nullable: true })
+  async report(
+    @Arg("problem") problem: string,
+    @Arg("username") username: string
+  ): Promise<Boolean | null> {
+    if (!username) {
+      return false;
+    }
+    sendEmail(process.env.REPORT_TARGET_EMAIL!, problem, username);
+    return true;
   }
 
   @Mutation(() => UserResponse)

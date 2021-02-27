@@ -1,18 +1,18 @@
 import { ApolloServer } from "apollo-server-express";
-import { __prod__, PORT } from "./constants";
-import mongoose from "mongoose";
+import cors from "cors";
+import { config } from "dotenv";
 import express from "express";
+import mongoose from "mongoose";
 import { buildSchema } from "type-graphql";
+import { PORT, __prod__ } from "./constants";
 import { HelloResolver } from "./resolvers/hello";
 import { ProductResolver } from "./resolvers/products";
-import { config } from "dotenv";
 import { UserResolver } from "./resolvers/user";
-import cors from "cors";
 
 const main = async () => {
   config();
   try {
-    await mongoose.connect(process.env.MONGO_CONNECTION_URL || "", {
+    await mongoose.connect(process.env.MONGO_CONNECTION_URL!, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
