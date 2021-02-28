@@ -23,7 +23,9 @@ const hello_1 = require("./resolvers/hello");
 const products_1 = require("./resolvers/products");
 const user_1 = require("./resolvers/user");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    dotenv_1.config();
+    if (!constants_1.__prod__) {
+        dotenv_1.config();
+    }
     try {
         yield mongoose_1.default.connect(process.env.MONGO_CONNECTION_URL, {
             useNewUrlParser: true,
