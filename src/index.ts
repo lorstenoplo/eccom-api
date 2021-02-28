@@ -1,6 +1,5 @@
 import { ApolloServer } from "apollo-server-express";
 import cors from "cors";
-import { config } from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import { buildSchema } from "type-graphql";
@@ -11,7 +10,7 @@ import { UserResolver } from "./resolvers/user";
 
 const main = async () => {
   if (!__prod__) {
-    config();
+    require("dotenv").config();
   }
   try {
     await mongoose.connect(process.env.MONGO_CONNECTION_URL!, {

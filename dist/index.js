@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_express_1 = require("apollo-server-express");
 const cors_1 = __importDefault(require("cors"));
-const dotenv_1 = require("dotenv");
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const type_graphql_1 = require("type-graphql");
@@ -24,7 +23,7 @@ const products_1 = require("./resolvers/products");
 const user_1 = require("./resolvers/user");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     if (!constants_1.__prod__) {
-        dotenv_1.config();
+        require("dotenv").config();
     }
     try {
         yield mongoose_1.default.connect(process.env.MONGO_CONNECTION_URL, {
