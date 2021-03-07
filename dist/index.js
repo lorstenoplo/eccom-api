@@ -55,6 +55,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(constants_1.PORT, () => {
         console.log(`server listening at http://localhost:${constants_1.PORT}`);
     });
+    module.exports = app;
 });
 main().catch((err) => console.dir(err));
 //# sourceMappingURL=index.js.map

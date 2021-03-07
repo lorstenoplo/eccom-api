@@ -48,6 +48,7 @@ const main = async () => {
   app.listen(PORT, () => {
     console.log(`server listening at http://localhost:${PORT}`);
   });
+  module.exports = app;
 };
 
 main().catch((err) => console.dir(err));
