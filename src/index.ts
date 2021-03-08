@@ -27,7 +27,7 @@ const main = async () => {
   const app = express();
   app.use(
     cors({
-      origin: __prod__ ? "https://goloop.vercel.app" : "http://localhost:3000",
+      origin: FRONTEND_URL!,
       credentials: true,
     })
   );
