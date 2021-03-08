@@ -39,7 +39,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     const app = express_1.default();
     app.use(cors_1.default({
-        origin: constants_1.__prod__ ? "https://goloop.vercel.app" : "http://localhost:3000",
+        origin: process.env.FRONTEND_URL,
         credentials: true,
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
