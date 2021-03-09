@@ -30,7 +30,22 @@ const main = async () => {
     cors({
       origin: process.env.FRONTEND_URL!,
       credentials: true,
-    })
+    }),
+    (req, res, next) => {
+      res.header("Access-Control-Allow-Credentials", "true");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "content-type, authorization, content-length, x-requested-with, accept, origin"
+      );
+      res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+      res.header("Allow", "POST, GET, OPTIONS");
+      res.header("Access-Control-Allow-Origin", "https://goloop.vercel.app/");
+      if (req.method === "OPTIONS") {
+        res.sendStatus(200);
+      } else {
+        next();
+      }
+    }
   );
 
   const apolloServer = new ApolloServer({
