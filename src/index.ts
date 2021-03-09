@@ -26,6 +26,7 @@ const main = async () => {
 
   const app = express();
   app.use(
+    "/graphql",
     cors({
       origin: process.env.FRONTEND_URL!,
       credentials: true,
