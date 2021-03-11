@@ -19,9 +19,9 @@
       "continue": true
     },
     {
-      "src": "/(.*)",
+      "src": "/graphql",
       "methods": ["OPTIONS"],
-      "dest": "/cors"
+      "dest": "cors.js"
     }
   ]
 }
