@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/graphql",
-      "methods": ["GET", "POST"],
+      "methods": ["GET", "POST", "OPTIONS"],
       "headers": {
         "Access-Control-Allow-Origin": "https://goloop.vercel.app",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
@@ -17,11 +17,6 @@
       },
       "dest": "index.js",
       "continue": true
-    },
-    {
-      "src": "/graphql",
-      "methods": ["OPTIONS"],
-      "dest": "cors.js"
     }
   ]
 }
