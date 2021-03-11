@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_express_1 = require("apollo-server-express");
-const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const type_graphql_1 = require("type-graphql");
@@ -38,10 +37,6 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("could connect", err);
     }
     const app = express_1.default();
-    app.use(cors_1.default({
-        origin: process.env.FRONTEND_URL,
-        credentials: true,
-    }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
             resolvers: [hello_1.HelloResolver, products_1.ProductResolver, user_1.UserResolver],
@@ -51,7 +46,13 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     app.get("/", (_, res) => {
         res.send("welcome to the products api");
     });
-    apolloServer.applyMiddleware({ app, cors: false });
+    apolloServer.applyMiddleware({
+        app,
+        cors: {
+            origin: constants_1.__prod__ ? "https://goloop.vercel.app" : "http://localhost:3000",
+            credentials: true,
+        },
+    });
     app.listen(constants_1.PORT, () => {
         console.log(`server listening at http://localhost:${constants_1.PORT}`);
     });
