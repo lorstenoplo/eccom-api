@@ -8,7 +8,7 @@
   ],
   "routes": [
     {
-      "src": "./(.*)",
+      "src": "/graphql",
       "methods": ["GET", "POST"],
       "headers": {
         "Access-Control-Allow-Origin": "https://goloop.vercel.app/",
