@@ -9,7 +9,14 @@
   "routes": [
     {
       "src": "./(.*)",
-      "dest": "/index"
+      "methods": ["GET", "POST"],
+      "headers": {
+        "Access-Control-Allow-Origin": "https://goloop.vercel.app/",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      "dest": "index.js",
+      "continue": true
     },
     {
       "src": "/(.*)",
