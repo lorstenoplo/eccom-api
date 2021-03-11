@@ -33,7 +33,7 @@ const main = async () => {
   });
 
   app.get("/", (_, res) => {
-    res.send("welcome to the products api");
+    res.send(`welcome to the products api, ${__prod__}`);
   });
 
   apolloServer.applyMiddleware({

@@ -44,7 +44,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         }),
     });
     app.get("/", (_, res) => {
-        res.send("welcome to the products api");
+        res.send(`welcome to the products api, ${constants_1.__prod__}`);
     });
     apolloServer.applyMiddleware({
         app,
