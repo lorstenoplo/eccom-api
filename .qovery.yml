@@ -1,0 +1,11 @@
+---
+application:
+  name: "goloop"
+  project: "goloop"
+  organization: "QoveryCommunity"
+routers:
+- name: "main-goloop"
+  routes:
+  - application_name: "goloop"
+    paths:
+    - "/*"
