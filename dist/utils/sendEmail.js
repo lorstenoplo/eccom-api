@@ -16,19 +16,21 @@ exports.sendEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 function sendEmail(to, text, from) {
     return __awaiter(this, void 0, void 0, function* () {
+        const email = process.env.REPORT_TARGET_EMAIL;
+        const password = process.env.REPORT_TARGET_PASSWORD;
         let transporter = nodemailer_1.default.createTransport({
-            host: "smtp.ethereal.email",
+            service: "gmail",
             port: 587,
             secure: false,
             auth: {
-                user: "uyzlzquge4n7qwfg@ethereal.email",
-                pass: "JjxMTxzkpZNjDvSVBQ",
+                user: email,
+                pass: password,
             },
         });
         let info = yield transporter.sendMail({
             from: `${from} <noreply@goloop.com>`,
             to,
-            subject: "Report from user",
+            subject: `Report from ${from}`,
             text,
         });
         console.log("Message sent: %s", info.messageId);
