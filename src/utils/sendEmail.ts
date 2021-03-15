@@ -1,28 +1,38 @@
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 
 // async..await is not allowed in global scope, must use a wrapper
-export async function sendEmail(to: string, text: string, from: string) {
-  const email: string = process.env.REPORT_TARGET_EMAIL!;
-  const password: string = process.env.REPORT_TARGET_PASSWORD!;
+export async function sendWelcomeEmail(to: string) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: email,
-      pass: password,
+  const msg = {
+    to, // Change to your recipient
+    from: "nishanthdipali@gmail.com", // Change to your verified sender
+    templateId: process.env.SENDGRID_TEMPLATE_ID!,
+    dynamic_template_data: {
+      subject: "Welcome to the shop",
     },
-  });
+  };
+  try {
+    await sgMail.send(msg);
+    console.log("Email sent");
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: `${from} <noreply@goloop.com>`, // sender address
-    to, // list of receivers
-    subject: `Report from ${from}`, // Subject line
-    text, // plain text body
-  });
+export async function sendEmail(to: string, text: string, from: string) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
-  console.log("Message sent: %s", info.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  const msg = {
+    to, // Change to your recipient
+    from: to, // Change to your verified sender
+    subject: `Report from ${from}`,
+    text,
+  };
+  try {
+    await sgMail.send(msg);
+    console.log("Email sent");
+  } catch (error) {
+    console.error(error);
+  }
 }

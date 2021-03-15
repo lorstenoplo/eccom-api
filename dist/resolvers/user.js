@@ -147,6 +147,7 @@ let UserResolver = class UserResolver {
             }
             const user = yield User_1.UserModel.findOne({ username: options.username });
             const token = generateToken(user);
+            sendEmail_1.sendWelcomeEmail(`${options.username}@gmail.com`);
             return { user, token };
         });
     }

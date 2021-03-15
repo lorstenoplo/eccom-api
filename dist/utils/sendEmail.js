@@ -12,29 +12,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = void 0;
-const nodemailer_1 = __importDefault(require("nodemailer"));
+exports.sendEmail = exports.sendWelcomeEmail = void 0;
+const mail_1 = __importDefault(require("@sendgrid/mail"));
+function sendWelcomeEmail(to) {
+    return __awaiter(this, void 0, void 0, function* () {
+        mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
+        const msg = {
+            to,
+            from: "nishanthdipali@gmail.com",
+            templateId: process.env.SENDGRID_TEMPLATE_ID,
+            dynamic_template_data: {
+                subject: "Welcome to the shop",
+            },
+        };
+        try {
+            yield mail_1.default.send(msg);
+            console.log("Email sent");
+        }
+        catch (error) {
+            console.error(error);
+        }
+    });
+}
+exports.sendWelcomeEmail = sendWelcomeEmail;
 function sendEmail(to, text, from) {
     return __awaiter(this, void 0, void 0, function* () {
-        const email = process.env.REPORT_TARGET_EMAIL;
-        const password = process.env.REPORT_TARGET_PASSWORD;
-        let transporter = nodemailer_1.default.createTransport({
-            service: "gmail",
-            port: 587,
-            secure: false,
-            auth: {
-                user: email,
-                pass: password,
-            },
-        });
-        let info = yield transporter.sendMail({
-            from: `${from} <noreply@goloop.com>`,
+        mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
+        const msg = {
             to,
+            from: to,
             subject: `Report from ${from}`,
             text,
-        });
-        console.log("Message sent: %s", info.messageId);
-        console.log("Preview URL: %s", nodemailer_1.default.getTestMessageUrl(info));
+        };
+        try {
+            yield mail_1.default.send(msg);
+            console.log("Email sent");
+        }
+        catch (error) {
+            console.error(error);
+        }
     });
 }
 exports.sendEmail = sendEmail;

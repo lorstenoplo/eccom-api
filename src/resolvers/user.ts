@@ -11,7 +11,7 @@ import { User, UserModel } from "../entities/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { DocumentType } from "@typegoose/typegoose";
-import { sendEmail } from "../utils/sendEmail";
+import { sendEmail, sendWelcomeEmail } from "../utils/sendEmail";
 
 @InputType()
 class UsernamePasswordInput {
@@ -127,6 +127,7 @@ export class UserResolver {
     }
     const user = await UserModel.findOne({ username: options.username });
     const token = generateToken(user);
+    sendWelcomeEmail(`${options.username}@gmail.com`);
     return { user, token };
   }
 
