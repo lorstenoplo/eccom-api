@@ -39,7 +39,7 @@ const main = async () => {
   apolloServer.applyMiddleware({
     app,
     cors: {
-      origin: __prod__ ? "https://goloop.vercel.app" : "http://localhost:3000",
+      origin: __prod__ ? "https://goloop.netlify.app" : "http://localhost:3000",
       credentials: true,
     },
   });
