@@ -44,9 +44,11 @@ const main = async () => {
     },
   });
 
-  app.listen(PORT, () => {
-    console.log(`server listening at http://localhost:${PORT}`);
-  });
+  if (!__prod__) {
+    app.listen(PORT, () => {
+      console.log(`server listening at http://localhost:${PORT}`);
+    });
+  }
   module.exports = app;
 };
 
