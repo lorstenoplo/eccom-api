@@ -53,12 +53,10 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             credentials: true,
         },
     });
-    if (!constants_1.__prod__) {
-        app.listen(constants_1.PORT, () => {
-            console.log(`server listening at http://localhost:${constants_1.PORT}`);
-        });
-    }
-    module.exports = app;
+   
+    app.listen(constants_1.PORT, () => {
+        console.log(`server listening at http://localhost:${constants_1.PORT}`);
+    });
 });
 main().catch((err) => console.dir(err));
 //# sourceMappingURL=index.js.map
