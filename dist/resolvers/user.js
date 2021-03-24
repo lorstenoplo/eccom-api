@@ -30,19 +30,23 @@ const User_1 = require("../entities/User");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const sendEmail_1 = require("../utils/sendEmail");
-let UsernamePasswordInput = class UsernamePasswordInput {
+let RegisterInput = class RegisterInput {
 };
 __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
-], UsernamePasswordInput.prototype, "username", void 0);
+], RegisterInput.prototype, "username", void 0);
 __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
-], UsernamePasswordInput.prototype, "password", void 0);
-UsernamePasswordInput = __decorate([
+], RegisterInput.prototype, "email", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], RegisterInput.prototype, "password", void 0);
+RegisterInput = __decorate([
     type_graphql_1.InputType()
-], UsernamePasswordInput);
+], RegisterInput);
 let FieldError = class FieldError {
 };
 __decorate([
@@ -123,10 +127,21 @@ let UserResolver = class UserResolver {
                     ],
                 };
             }
+            if (!options.email.includes("@") && !options.email.includes(".")) {
+                return {
+                    errors: [
+                        {
+                            field: "email",
+                            message: "Email is not formated properly",
+                        },
+                    ],
+                };
+            }
             const salt = bcryptjs_1.default.genSaltSync(10);
             const hashedPassword = yield bcryptjs_1.default.hash(options.password, salt);
             const saveUser = User_1.UserModel.create({
                 username: options.username,
+                email: options.email,
                 password: hashedPassword,
                 createdAt: new Date(),
             });
@@ -147,24 +162,26 @@ let UserResolver = class UserResolver {
             }
             const user = yield User_1.UserModel.findOne({ username: options.username });
             const token = generateToken(user);
-            sendEmail_1.sendWelcomeEmail(`${options.username}@gmail.com`);
+            sendEmail_1.sendWelcomeEmail(options.email);
             return { user, token };
         });
     }
-    login(options) {
+    login(emailOrUsername, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield User_1.UserModel.findOne({ username: options.username });
+            const user = yield User_1.UserModel.findOne(emailOrUsername.includes("@")
+                ? { email: emailOrUsername }
+                : { username: emailOrUsername });
             if (!user) {
                 return {
                     errors: [
                         {
-                            field: "username",
-                            message: "A user with that username does not exist",
+                            field: "emailOrUsername",
+                            message: "A user with that emailOrUsername does not exist",
                         },
                     ],
                 };
             }
-            const valid = yield bcryptjs_1.default.compare(options.password, user.password);
+            const valid = yield bcryptjs_1.default.compare(password, user.password);
             if (!valid) {
                 return {
                     errors: [
@@ -209,14 +226,15 @@ __decorate([
     type_graphql_1.Mutation(() => UserResponse),
     __param(0, type_graphql_1.Arg("options")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UsernamePasswordInput]),
+    __metadata("design:paramtypes", [RegisterInput]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "register", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg("options")),
+    __param(0, type_graphql_1.Arg("emailOrUsername")),
+    __param(1, type_graphql_1.Arg("password")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UsernamePasswordInput]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "login", null);
 __decorate([

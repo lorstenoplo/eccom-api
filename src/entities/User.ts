@@ -11,6 +11,10 @@ export class User {
   username: string;
 
   @Field(() => String)
+  @Property({ required: true, unique: true })
+  email: string;
+
+  @Field(() => String)
   @Property({ required: true })
   createdAt = new Date();
 

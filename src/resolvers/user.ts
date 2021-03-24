@@ -14,9 +14,11 @@ import { DocumentType } from "@typegoose/typegoose";
 import { sendEmail, sendWelcomeEmail } from "../utils/sendEmail";
 
 @InputType()
-class UsernamePasswordInput {
+class RegisterInput {
   @Field()
   username: string;
+  @Field()
+  email: string;
   @Field()
   password: string;
 }
@@ -78,7 +80,7 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async register(
-    @Arg("options") options: UsernamePasswordInput
+    @Arg("options") options: RegisterInput
   ): Promise<UserResponse> {
     if (options.username.length <= 2) {
       return {
@@ -102,11 +104,23 @@ export class UserResolver {
       };
     }
 
+    if (!options.email.includes("@") && !options.email.includes(".")) {
+      return {
+        errors: [
+          {
+            field: "email",
+            message: "Email is not formated properly",
+          },
+        ],
+      };
+    }
+
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = await bcrypt.hash(options.password, salt);
 
     const saveUser = UserModel.create({
       username: options.username,
+      email: options.email,
       password: hashedPassword,
       createdAt: new Date(),
     });
@@ -127,26 +141,31 @@ export class UserResolver {
     }
     const user = await UserModel.findOne({ username: options.username });
     const token = generateToken(user);
-    sendWelcomeEmail(`${options.username}@gmail.com`);
+    sendWelcomeEmail(options.email);
     return { user, token };
   }
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg("options") options: UsernamePasswordInput
+    @Arg("emailOrUsername") emailOrUsername: string,
+    @Arg("password") password: string
   ): Promise<UserResponse> {
-    const user = await UserModel.findOne({ username: options.username });
+    const user = await UserModel.findOne(
+      emailOrUsername.includes("@")
+        ? { email: emailOrUsername }
+        : { username: emailOrUsername }
+    );
     if (!user) {
       return {
         errors: [
           {
-            field: "username",
-            message: "A user with that username does not exist",
+            field: "emailOrUsername",
+            message: "A user with that emailOrUsername does not exist",
           },
         ],
       };
     }
-    const valid = await bcrypt.compare(options.password, user.password);
+    const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       return {
         errors: [
