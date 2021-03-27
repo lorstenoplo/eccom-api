@@ -30,6 +30,8 @@ const User_1 = require("../entities/User");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const sendEmail_1 = require("../utils/sendEmail");
+const stripe_1 = require("../stripe");
+const stripe_2 = __importDefault(require("stripe"));
 let RegisterInput = class RegisterInput {
 };
 __decorate([
@@ -196,12 +198,26 @@ let UserResolver = class UserResolver {
             return { user, token };
         });
     }
-    delete(username) {
+    delete(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield User_1.UserModel.findOne({ username });
+            const user = yield User_1.UserModel.findOne({ email });
             if (user) {
                 yield user.deleteOne();
+                sendEmail_1.sendByeEmail(email, user.username);
                 return user;
+            }
+            return null;
+        });
+    }
+    addCreditCard(userId, address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = User_1.UserModel.findById(userId);
+            if (user) {
+                yield stripe_1.stripe.customers.create({
+                    email: user.email,
+                    name: user.username,
+                    address,
+                });
             }
             return null;
         });
@@ -239,11 +255,19 @@ __decorate([
 ], UserResolver.prototype, "login", null);
 __decorate([
     type_graphql_1.Mutation(() => User_1.User, { nullable: true }),
-    __param(0, type_graphql_1.Arg("username", () => String)),
+    __param(0, type_graphql_1.Arg("email", () => String)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "delete", null);
+__decorate([
+    type_graphql_1.Mutation(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Arg("userId", () => type_graphql_1.ID)),
+    __param(1, type_graphql_1.Arg("address", () => String)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "addCreditCard", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver()
 ], UserResolver);

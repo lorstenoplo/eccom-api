@@ -41,6 +41,11 @@ __decorate([
     typegoose_1.prop({ required: true }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    typegoose_1.prop({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "stripeId", void 0);
 User = __decorate([
     type_graphql_1.ObjectType()
 ], User);

@@ -38,6 +38,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "5.10.1",
     "reflect-metadata": "^0.1.13",
+    "stripe": "^8.140.0",
     "type-graphql": "^1.1.1"
   }
 }

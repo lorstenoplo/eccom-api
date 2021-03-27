@@ -21,6 +21,10 @@ export class User {
   @Field(() => String)
   @Property({ required: true })
   password: string;
+
+  @Field(() => String)
+  @Property({ nullable: true })
+  stripeId?: string;
 }
 
 export const UserModel = getModelForClass(User);

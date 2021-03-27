@@ -6,12 +6,15 @@ import {
   Field,
   ObjectType,
   Query,
+  ID,
 } from "type-graphql";
 import { User, UserModel } from "../entities/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { DocumentType } from "@typegoose/typegoose";
-import { sendEmail, sendWelcomeEmail } from "../utils/sendEmail";
+import { sendEmail, sendWelcomeEmail, sendByeEmail } from "../utils/sendEmail";
+import { stripe } from "../stripe";
+import Stripe from "stripe";
 
 @InputType()
 class RegisterInput {
@@ -182,15 +185,34 @@ export class UserResolver {
 
   @Mutation(() => User!, { nullable: true })
   async delete(
-    @Arg("username", () => String) username: string
+    @Arg("email", () => String) email: string
   ): Promise<User | undefined | null> {
-    const user = await UserModel.findOne({ username });
+    const user = await UserModel.findOne({ email });
 
     if (user) {
       await user.deleteOne();
+      sendByeEmail(email, (user as any).username);
       return user;
     }
 
+    return null;
+  }
+
+  @Mutation(() => User!, { nullable: true })
+  async addCreditCard(
+    @Arg("userId", () => ID!) userId: typeof ID,
+    @Arg("address", () => String!)
+    address: Stripe.Emptyable<Stripe.AddressParam>
+  ): Promise<User | null> {
+    const user = UserModel.findById(userId);
+
+    if (user) {
+      await stripe.customers.create({
+        email: (user as any).email,
+        name: (user as any).username,
+        address,
+      });
+    }
     return null;
   }
 }
