@@ -49,7 +49,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     apolloServer.applyMiddleware({
         app,
         cors: {
-            origin: constants_1.__prod__ ? "https://goloop.netlify.app" : "http://localhost:3000",
+            origin: "*",
             credentials: true,
         },
     });
